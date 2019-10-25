@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  pages: { index: { entry: path.resolve(__dirname, './client/main.js') } },
+  pages: { index: { entry: path.resolve(__dirname, './client/main.ts') } },
   devServer: {
     proxy: {
       '/api': {

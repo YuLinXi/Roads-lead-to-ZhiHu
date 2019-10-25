@@ -1,22 +1,19 @@
 import Koa from 'koa';
 import cors from 'koa2-cors';
 import bodyParser from 'koa-bodyparser';
-import mongoose from 'mongoose';
 import middleWares from './middlewares';
 import * as config from './config';
 import router from './routes';
+import * as dbModule from './utils/db';
+import * as commons from './utils/commons';
 
-mongoose.connect(config.DB, { useNewUrlParser: true });
-const db = mongoose.connection;
+dbModule.connect();
 const app = new Koa();
 app.use(bodyParser());
 app.use(cors());
+app.context.commons = commons;
 middleWares(app);
 router(app);
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('mongodb connected success!!');
-});
 app.on('test', () => {
   console.log('tst');
 });

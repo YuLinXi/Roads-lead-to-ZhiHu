@@ -3,11 +3,7 @@ import { TestBlob } from '../models';
 export const getTest = async (ctx) => {
   try {
     const req = await TestBlob.find();
-    ctx.body = {
-      data: req,
-      code: 0,
-      msg: '成功',
-    };
+    ctx.body = ctx.commons.resReturn(req, 0, '获取成功');
   } catch (e) {
     ctx.throw(500, '服务器内部错误');
   }
