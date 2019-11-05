@@ -1,18 +1,21 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import TestTypescript from '@/views/TestTypescript.vue';
+import MainLayout from '@/components/MainLayout/Index.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/Test',
-    name: 'Test',
-    component: TestTypescript,
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    // component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    path: '/',
+    name: 'Home',
+    component: MainLayout,
+    children: [
+      {
+        path: '/',
+        name: 'recommend',
+        component: () => import(/* webpackChunkName: "recommend" */ '@/views/home/Index.vue'),
+      },
+    ],
   },
 ];
 

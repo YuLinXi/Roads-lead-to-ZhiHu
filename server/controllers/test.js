@@ -29,7 +29,7 @@ export const createTest = async (ctx) => {
     ctx.body = {
       data: null,
       code: 400,
-      msg: e.message,
+      msg: e.privateMsg,
     };
     return;
   }
