@@ -16,6 +16,9 @@
             <a>热榜</a>
           </li>
         </ul>
+        <div class="CardItem-list">
+          <card-item></card-item>
+        </div>
       </div>
     </div>
     <div class="rightSideBar">
@@ -210,15 +213,108 @@
           ></svg-icon>
         </div>
       </div>
+      <ul class="navList">
+        <li class="navList-item">
+          <svg-icon
+            name="collect"
+            width="18"
+            height="18"
+            color="#8590a6"
+          >
+          </svg-icon>
+          <span class="navList-item-text">
+            我的收藏
+          </span>
+          <span class="navList-item-numbers">111</span>
+        </li>
+        <li class="navList-item">
+          <svg-icon
+            name="question"
+            width="18"
+            height="18"
+            color="#8590a6"
+          >
+          </svg-icon>
+          <span class="navList-item-text">
+            我关注的问题
+          </span>
+          <span class="navList-item-numbers">194</span>
+        </li>
+        <li class="navList-item">
+          <svg-icon
+            name="invite"
+            width="18"
+            height="18"
+            color="#8590a6"
+          >
+          </svg-icon>
+          <span class="navList-item-text">
+            我的邀请
+          </span>
+          <span class="navList-item-numbers">6</span>
+        </li>
+        <li class="navList-item">
+          <svg-icon
+            name="balance"
+            width="18"
+            height="18"
+            color="#8590a6"
+          >
+          </svg-icon>
+          <span class="navList-item-text">
+            我的余额
+          </span>
+          <span class="navList-item-numbers">267</span>
+        </li>
+        <li class="navList-item">
+          <svg-icon
+            name="station"
+            width="18"
+            height="18"
+            color="#8590a6"
+          >
+          </svg-icon>
+          <span class="navList-item-text">
+            站务中心
+          </span>
+        </li>
+        <li class="navList-item">
+          <svg-icon
+            name="copyright"
+            width="18"
+            height="18"
+            color="#8590a6"
+          >
+          </svg-icon>
+          <span class="navList-item-text">
+            版权服务中心
+          </span>
+        </li>
+      </ul>
+      <div class="advertisePosition">
+        <a class="advertisePosition-link" target="_blank">
+          <img style="width: 100%" src="https://img1.360buyimg.com/imgb/s250x250_jfs/t1/44812/11/7619/312733/5d54d323E6c88d8a2/41ddf03c04e8c795.jpg" alt="">
+        </a>
+        <div class="advertisePosition-close">
+          <svg-icon
+            class="advertisePosition-icon"
+            name="closeBg"
+            width="20"
+            height="20"
+          ></svg-icon>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import CardItem from './components/CardItem.vue';
 
 @Component({
   components: {
+    CardItem,
   },
 })
 export default class Recommend extends Vue {}
@@ -347,10 +443,12 @@ export default class Recommend extends Vue {}
       overflow: hidden;
       width: 100%;
       transition: .35s;
+      margin-bottom: 10px;
       &:hover .advertisePosition-close {
         opacity: 1;
       }
       &-link {
+        display: block;
         width: 100%;
       }
       &-close {
@@ -361,5 +459,39 @@ export default class Recommend extends Vue {}
         transition: .35s;
       }
     }
+    .navList {
+      background-color: #fff;
+      padding: 8px 0;
+      margin-bottom: 10px;
+      &-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 40px;
+        padding: 0 20px;
+        font-weight: 200;
+        font-size: 14px;
+        cursor: pointer;
+        &:hover {
+          background: #f6f6f6;
+          .navList-item-numbers {
+            background-color: #fff;
+          }
+        }
+        &-text {
+          flex: 1;
+          color: #8590a6;
+          padding: 0 16px;
+        }
+        &-numbers {
+          padding: 6px 10px;
+          border-radius: 2px;
+          background: #f6f6f6;
+          color: #8590a6;
+          font-size: 12px;
+        }
+      }
+    }
   }
+
 </style>
