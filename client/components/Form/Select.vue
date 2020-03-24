@@ -4,6 +4,7 @@
       ref="Button"
       class="Select-button"
       @focus="handleFocus"
+      @blur="handleBlur"
     >
       中国 +86
       <svg-icon
@@ -63,7 +64,6 @@ export default class Select extends Vue {
 
   @Emit('input')
   emitSelect(item: any) {
-    this.focus = false;
     this.refButton.blur();
     return item;
   }
@@ -71,6 +71,10 @@ export default class Select extends Vue {
   handleFocus() {
     this.focus = true;
     this.handleResetPopupPosition();
+  }
+
+  handleBlur() {
+    this.focus = false;
   }
 
   onMousedown(e: Event) {

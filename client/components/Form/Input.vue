@@ -13,7 +13,7 @@
       />
     </label>
     <div
-      v-if="required && !isFocus && !value"
+      v-if="required && !isFocus && !value && !initLoad"
       class="InputContainer-errorMask"
       @click="handleMessageFocus"
     >
@@ -40,6 +40,8 @@ import {
 export default class extends Vue {
   isFocus: Boolean = false;
 
+  initLoad: Boolean = true;
+
   @Model('input', { type: String }) readonly value!: String;
 
   @Ref('input') readonly inputNode! : HTMLButtonElement;
@@ -54,6 +56,7 @@ export default class extends Vue {
 
   @Emit('input')
   handleInputChange(e: Event) {
+    this.initLoad = false;
     return (e.target as HTMLInputElement).value;
   }
 

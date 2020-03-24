@@ -29,7 +29,6 @@
                     class="select"
                     v-model="form.areaCode"
                   />
-                  {{ form.areaCode }}
                   <span class="split"></span>
                   <IInput
                     placeholder="手机号"
@@ -48,8 +47,15 @@
                     class="input"
                     type="password"
                   />
+                  <div class="login-sendMessage">
+                    获取短信验证码
+                  </div>
+                </div>
+                <div class="login-sendVoiceMessage">
+                  <button class="Button Button--plain">接收语音验证码</button>
                 </div>
               </div>
+              <button class="Button Button--primary">注册登陆</button>
             </template>
           </div>
         </div>
@@ -207,6 +213,7 @@ export default class extends Vue {
           margin-top: 12px;
         }
         .login-input {
+          position: relative;
           border-bottom: 1px solid #ebebeb;
           .input {
             height: 48px;
@@ -221,6 +228,29 @@ export default class extends Vue {
               background: #ebebeb;
             }
           }
+        }
+        .login-sendMessage {
+          cursor: pointer;
+          font-size: 14px;
+          position: absolute;
+          top: 24px;
+          right: 0;
+          padding: 4px 0;
+          color: #175199;
+          -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+          &:hover {
+            color: #76839b;
+          }
+        }
+        .login-sendVoiceMessage {
+          margin-top: 12px;
+          height: 20px;
+          display: flex;
+          justify-content: flex-end;
+          background: #fff;
+          color: #8590a6;
+          font-size: 14px;
         }
       }
     }
