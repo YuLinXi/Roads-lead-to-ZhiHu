@@ -1,7 +1,8 @@
 <template>
   <div class="recommend">
     <div class="main-container">
-      <div class="recommend-ad">
+      <div
+        class="recommend-ad">
         预留banner位
       </div>
       <div class="main-content">

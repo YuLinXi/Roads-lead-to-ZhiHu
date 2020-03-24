@@ -2,6 +2,7 @@
 import './arrowDownBorder'
 import './arrowLeftBorder'
 import './arrowRightBorder'
+import './arrowUpDown'
 import './article'
 import './baike'
 import './balance'

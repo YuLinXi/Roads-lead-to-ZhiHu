@@ -9,6 +9,10 @@ module.exports = {
         changeOrigin: true,
       },
     },
+    overlay: {
+      warnings: false,
+      errors: false,
+    },
   },
   chainWebpack: (config) => {
     config.resolve.alias
