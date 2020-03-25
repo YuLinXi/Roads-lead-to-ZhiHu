@@ -1,11 +1,11 @@
 <template>
-  <div class="InputContainer">
+  <div :class="{ 'InputContainer':true, 'showPassword': showPassword }">
     <label for="Input">
       <input
         ref="input"
         @input="handleInputChange"
         id="Input"
-        :type="type"
+        :type="realType"
         :placeholder="placeholder"
         :value="value"
         @blur="handleBlur"
@@ -14,11 +14,11 @@
       <svg-icon
         v-if="type === 'password'"
         @click="handleSwitchPassword"
-        class="icon"
-        :name="showPassword ? 'close-eye' : 'open-eye'"
+        class="input-suffix"
+        :name="showPassword ? 'open-eye' : 'close-eye'"
         width="24"
         height="24"
-        color="#0084FF"
+        color="#8590a6"
       >
       </svg-icon>
     </label>
@@ -66,6 +66,10 @@ export default class extends Vue {
 
   @Prop({ default: false }) required!: Boolean;
 
+  get realType() {
+    return this.showPassword ? 'text' : this.type;
+  }
+
   @Emit('input')
   handleInputChange(e: Event) {
     this.initLoad = false;
@@ -96,6 +100,11 @@ export default class extends Vue {
   .InputContainer {
     position: relative;
     overflow: hidden;
+    &.showPassword {
+      input {
+        font-size: 14px;
+      }
+    }
     &-errorMask {
       position: absolute;
       height: 90%;
@@ -121,10 +130,21 @@ export default class extends Vue {
       &::-webkit-input-placeholder {
         color: #8590a6;
         font-weight: 400;
+        font-size: 14px;
       }
       &:-webkit-autofill {
         -webkit-box-shadow: 0 0 0px 1000px white inset;
       }
+      &[type=password] {
+        font-size: 20px;
+      }
+    }
+    .input-suffix {
+      position: absolute;
+      right: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
     }
   }
   .InputContainer,

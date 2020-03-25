@@ -45,7 +45,6 @@
                     message="请输入短信验证码"
                     :required="true"
                     class="input"
-                    type="password"
                   />
                   <div class="login-sendMessage">
                     获取短信验证码
@@ -77,12 +76,15 @@
                     type="password"
                   />
                 </div>
-                <div class="login-sendVoiceMessage">
-                  <button class="Button Button--plain">接收语音验证码</button>
+                <div class="login-options">
+                  <span>海外手机登陆</span>
+                  <span>忘记密码?</span>
                 </div>
               </div>
             </template>
-            <button class="login-submit Button Button--primary">注册/登陆</button>
+            <button class="login-submit Button Button--primary">
+              {{ loginType === 'PHONE' ? '注册/登陆' : '登陆' }}
+            </button>
             <div class="login-information">
               未注册手机验证后自动登录，注册即代表同意《知乎协议》《隐私保护指引》
             </div>
@@ -328,6 +330,21 @@ export default class extends Vue {
           transform: translateY(-50%);
           &:hover {
             color: #76839b;
+          }
+        }
+        .login-options {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 14px;
+          margin-top: 12px;
+          > span:nth-child(1) {
+            color: #175199;
+            cursor: pointer;
+          }
+          > span:nth-child(2) {
+            color: #8590a6;
+            cursor: pointer;
           }
         }
         .login-sendVoiceMessage {
