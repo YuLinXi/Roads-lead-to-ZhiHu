@@ -11,6 +11,16 @@
         @blur="handleBlur"
         @focus="handleFocus"
       />
+      <svg-icon
+        v-if="type === 'password'"
+        @click="handleSwitchPassword"
+        class="icon"
+        :name="showPassword ? 'close-eye' : 'open-eye'"
+        width="24"
+        height="24"
+        color="#0084FF"
+      >
+      </svg-icon>
     </label>
     <div
       v-if="required && !isFocus && !value && !initLoad"
@@ -39,6 +49,8 @@ import {
 
 export default class extends Vue {
   isFocus: Boolean = false;
+
+  showPassword: Boolean = false;
 
   initLoad: Boolean = true;
 
@@ -72,6 +84,10 @@ export default class extends Vue {
     if (!this.isFocus && this.required) {
       this.inputNode.focus();
     }
+  }
+
+  handleSwitchPassword() {
+    this.showPassword = !this.showPassword;
   }
 }
 </script>

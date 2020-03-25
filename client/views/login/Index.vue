@@ -55,15 +55,100 @@
                   <button class="Button Button--plain">接收语音验证码</button>
                 </div>
               </div>
-              <button class="Button Button--primary">注册登陆</button>
             </template>
+            <template v-else>
+              <div class="login-content-input">
+                <div class="login-input account">
+                  <IInput
+                    placeholder="手机号"
+                    message="请输入手机号"
+                    :required="true"
+                    class="input"
+                    v-model="form.account"
+                  />
+                </div>
+                <div class="login-input">
+                  <IInput
+                    v-model="form.password"
+                    placeholder="密码"
+                    message="请输入密码"
+                    :required="true"
+                    class="input"
+                    type="password"
+                  />
+                </div>
+                <div class="login-sendVoiceMessage">
+                  <button class="Button Button--plain">接收语音验证码</button>
+                </div>
+              </div>
+            </template>
+            <button class="login-submit Button Button--primary">注册/登陆</button>
+            <div class="login-information">
+              未注册手机验证后自动登录，注册即代表同意《知乎协议》《隐私保护指引》
+            </div>
           </div>
         </div>
       </div>
       <div class="login-socialLogin">
+        <div>社交账号登陆</div>
+        <div>
+          <svg-icon
+            class="icon"
+            name="wechat"
+            width="20"
+            height="20"
+            color="#60c84d"
+          >
+          </svg-icon>
+          微信
+        </div>
+        <div>
+          <svg-icon
+            class="icon"
+            name="qq"
+            width="20"
+            height="20"
+            color="#50c8fd"
+          >
+          </svg-icon>
+          QQ
+        </div>
+        <div>
+          <svg-icon
+            class="icon"
+            name="weibo"
+            width="20"
+            height="20"
+            color="#fb6622"
+          >
+          </svg-icon>
+          微博
+        </div>
       </div>
       <div class="login-footer">
-
+        <div class="login-organization">
+          <svg-icon
+            class="icon"
+            name="dredgeOrg"
+            width="20"
+            height="20"
+            color="#0084FF"
+          >
+          </svg-icon>
+          开通机构号
+        </div>
+        <span class="split"></span>
+        <div class="download-app">
+          <svg-icon
+            class="icon"
+            name="zhihu-square-fill"
+            width="24"
+            height="24"
+            color="#0084FF"
+          >
+          </svg-icon>
+          下载知乎App
+        </div>
       </div>
     </div>
     <div class="loginContainer-footer">
@@ -105,6 +190,7 @@ interface formObj {
   account: String,
   code: String,
   areaCode: String,
+  password: String,
 }
 
 @Component({
@@ -121,6 +207,7 @@ export default class extends Vue {
     account: '',
     code: '',
     areaCode: '',
+    password: '',
   };
 
   handleTabChange(type: String): void {
@@ -174,7 +261,7 @@ export default class extends Vue {
         overflow: hidden;
       }
       &-form {
-        padding: 0 24px 84px;
+        padding: 0 24px 0;
         overflow: hidden;
       }
       &-tabs {
@@ -268,6 +355,23 @@ export default class extends Vue {
       border-radius: 0 0 4px 4px;
       margin-bottom: 10px;
       box-sizing: border-box;
+      align-items: center;
+      > div:nth-child(1) { flex: 1 }
+      > div:nth-child(n+2) {
+        margin-left: 22px;
+      }
+    }
+    .login-information {
+      padding: 12px 0;
+      color: grey;
+      font-size: 13px;
+      text-align: left;
+      line-height: 1.3;
+      margin-top: 30px;
+    }
+    .login-submit {
+      margin-top: 30px;
+      height: 36px;
     }
     .login-footer {
       box-sizing: border-box;
@@ -283,6 +387,19 @@ export default class extends Vue {
       align-items: center;
       display: flex;
       border-radius: 4px;
+      font-weight: 400;
+      justify-content: space-between;
+      > span.split {
+        box-sizing: border-box;
+        margin: 0;
+        min-width: 0;
+        height: 20px;
+        width: 1px;
+        background-color: #EBEBEB;
+      }
+      > div {
+        cursor: pointer;
+      }
     }
     &-footer {
       font-size: 12px;
