@@ -27,10 +27,12 @@
                 <div class="login-input account">
                   <ISelect
                     class="select"
+                    :options="options"
                     v-model="form.areaCode"
                   />
                   <span class="split"></span>
                   <IInput
+                    ref="InputPhoneRef"
                     placeholder="手机号"
                     message="请输入手机号"
                     :required="true"
@@ -40,18 +42,26 @@
                 </div>
                 <div class="login-input">
                   <IInput
+                    ref="InputCodeRef"
                     v-model="form.code"
                     placeholder="输入6位短信验证码"
                     message="请输入短信验证码"
                     :required="true"
                     class="input"
                   />
-                  <div class="login-sendMessage">
+                  <div
+                    @click="getMessageCode"
+                    class="login-sendMessage">
                     获取短信验证码
                   </div>
                 </div>
                 <div class="login-sendVoiceMessage">
-                  <button class="Button Button--plain">接收语音验证码</button>
+                  <button
+                    @click="getVoiceCode"
+                    class="Button Button--plain"
+                  >
+                    接收语音验证码
+                  </button>
                 </div>
               </div>
             </template>
@@ -184,7 +194,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Ref } from 'vue-property-decorator';
 import IInput from '@/components/Form/Input.vue';
 import ISelect from '@/components/Form/Select.vue';
 
@@ -194,7 +204,6 @@ interface formObj {
   areaCode: String,
   password: String,
 }
-
 @Component({
   name: 'Login',
   components: {
@@ -203,17 +212,52 @@ interface formObj {
   },
 })
 export default class extends Vue {
+  @Ref('InputPhoneRef') readonly InputPhoneRef!: IInput;
+
+  @Ref('InputCodeRef') readonly InputCodeRef!: IInput;
+
   loginType: String = 'PHONE';
+
+  options: Array<Object> = [];
 
   form: formObj = {
     account: '',
     code: '',
-    areaCode: '',
+    areaCode: '+86',
     password: '',
   };
 
+  async mounted() {
+    try {
+      const { data } = await this.$http.get('/common/supported_countries');
+      if (data.code === 0) {
+        this.options = data.data.map((item: any) => ({ value: item.code, verbose: `${item.name} ${item.code}`, key: `${item.abbr}-${item.code}` }));
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   handleTabChange(type: String): void {
     this.loginType = type;
+  }
+
+  getVoiceCode() {
+    console.log(this.InputPhoneRef)
+    if (!this.form.account && this.InputPhoneRef) {
+      this.InputPhoneRef.validate();
+    } else if (!this.form.code && this.InputCodeRef) {
+      this.InputCodeRef.validate();
+    }
+  }
+
+  getMessageCode() {
+    console.log(this.InputPhoneRef)
+    if (!this.form.account && this.InputPhoneRef) {
+      this.InputPhoneRef.validate();
+    } else if (!this.form.code && this.InputCodeRef) {
+      this.InputCodeRef.validate();
+    }
   }
 }
 </script>

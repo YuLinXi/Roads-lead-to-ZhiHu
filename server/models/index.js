@@ -1,7 +1,5 @@
-import TestBlob from './test';
-import SubTestBlob from './subTest';
+import UserBlob from './user';
 
 export {
-  TestBlob,
-  SubTestBlob,
+  UserBlob,
 };

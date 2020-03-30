@@ -1,12 +1,14 @@
 import Router from 'koa-router';
-import users from './test';
-import subTest from './subTest';
+import users from './user';
+import commons from './common';
 
-const router = new Router();
+const router = new Router({
+  prefix: '/api',
+});
 
 export default function (app) {
   users(router);
-  subTest(router);
+  commons(router);
   app
     .use(router.routes())
     .use(router.allowedMethods());

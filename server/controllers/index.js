@@ -1,5 +1,5 @@
-import * as test from './test';
+import * as users from './users';
 
 export {
-  test,
+  users,
 };

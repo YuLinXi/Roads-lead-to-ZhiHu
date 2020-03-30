@@ -93,6 +93,11 @@ export default class extends Vue {
   handleSwitchPassword() {
     this.showPassword = !this.showPassword;
   }
+
+  validate() {
+    console.log('111')
+    this.initLoad = false;
+  }
 }
 </script>
 

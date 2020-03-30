@@ -6,12 +6,14 @@ import * as config from './config';
 import router from './routes';
 import * as dbModule from './utils/db';
 import * as commons from './utils/commons';
+import * as enums from './utils/enums';
 
 dbModule.connect();
 const app = new Koa();
 app.use(bodyParser());
 app.use(cors());
 app.context.commons = commons;
+app.context.enums = enums;
 middleWares(app);
 router(app);
 app.on('test', () => {

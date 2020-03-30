@@ -6,7 +6,7 @@
       @focus="handleFocus"
       @blur="handleBlur"
     >
-      中国 +86
+      {{ realVerbose }}
       <svg-icon
         class="icon"
         name="arrowUpDown"
@@ -21,13 +21,14 @@
       ref="SelectPopup"
       class="SelectPopup">
       <button
+        v-for="item in options"
         @mousedown="onMousedown"
-        v-for="item in 50"
         class="Select-option"
-        :key="item"
+        :class="{ active: value === item.value }"
+        :key="item.key || item.value"
         @click="emitSelect(item)"
       >
-        {{ item }}
+        {{ item.verbose }}
       </button>
     </div>
   </div>
@@ -40,6 +41,7 @@ import {
   Ref,
   Emit,
   Model,
+  Prop,
 } from 'vue-property-decorator';
 
 @Component({
@@ -47,6 +49,8 @@ import {
   components: {},
 })
 export default class Select extends Vue {
+  @Prop({ default: () => [] }) options!: Array<T>;
+
   @Model('input', { type: [String, Number] }) readonly value!: String;
 
   @Ref('SelectPopup') readonly refSelectPopup!: HTMLButtonElement;
@@ -57,6 +61,17 @@ export default class Select extends Vue {
 
   focus: Boolean = false;
 
+  defaultActive: any = '';
+
+  get realVerbose() {
+    const findRest = this.options.find(item => this.value === item.value);
+    console.log(findRest)
+    if (findRest) {
+      return findRest.verbose;
+    }
+    return this.value;
+  }
+
   mounted() {
     document.body.appendChild(this.refSelectPopup);
     this.handleResetPopupPosition();
@@ -65,7 +80,7 @@ export default class Select extends Vue {
   @Emit('input')
   emitSelect(item: any) {
     this.refButton.blur();
-    return item;
+    return item.value;
   }
 
   handleFocus() {
@@ -134,6 +149,7 @@ export default class Select extends Vue {
     text-align: left;
     background: none;
     border: none;
+    &.active,
     &:hover,
     &:focus,
     &:active {
