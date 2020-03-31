@@ -6,12 +6,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev-server": "nodemon server/start.js",
+    "dev-server": "NODE_ENV=development nodemon server/start.js",
     "dev-client": "vue-cli-service serve",
     "dev": "npm run dev-server & npm run dev-client",
     "svg": "vsvg -s ./client/icons/svg -t ./client/icons/components --ext ts --es6"
   },
   "dependencies": {
+    "aes-js": "^3.1.2",
     "axios": "^0.19.0",
     "babel-core": "^6.26.3",
     "babel-polyfill": "^6.26.0",

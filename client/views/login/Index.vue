@@ -32,16 +32,18 @@
                   />
                   <span class="split"></span>
                   <IInput
+                    key="PHONE_PASSWORD"
                     ref="InputPhoneRef"
                     placeholder="手机号"
                     message="请输入手机号"
                     :required="true"
                     class="input"
-                    v-model="form.account"
+                    v-model="form.phone"
                   />
                 </div>
                 <div class="login-input">
                   <IInput
+                    key="CODE"
                     ref="InputCodeRef"
                     v-model="form.code"
                     placeholder="输入6位短信验证码"
@@ -69,15 +71,19 @@
               <div class="login-content-input">
                 <div class="login-input account">
                   <IInput
+                    key="PASSWORD_PHONE"
+                    ref="InputPhoneRef"
                     placeholder="手机号"
                     message="请输入手机号"
                     :required="true"
                     class="input"
-                    v-model="form.account"
+                    v-model="form.phone"
                   />
                 </div>
                 <div class="login-input">
                   <IInput
+                    key="PASSWORD"
+                    ref="InputPasswordRef"
                     v-model="form.password"
                     placeholder="密码"
                     message="请输入密码"
@@ -92,7 +98,10 @@
                 </div>
               </div>
             </template>
-            <button class="login-submit Button Button--primary">
+            <button
+              @click="handleSubmit"
+              class="login-submit Button Button--primary"
+            >
               {{ loginType === 'PHONE' ? '注册/登陆' : '登陆' }}
             </button>
             <div class="login-information">
@@ -199,7 +208,7 @@ import IInput from '@/components/Form/Input.vue';
 import ISelect from '@/components/Form/Select.vue';
 
 interface formObj {
-  account: String,
+  phone: String,
   code: String,
   areaCode: String,
   password: String,
@@ -216,12 +225,18 @@ export default class extends Vue {
 
   @Ref('InputCodeRef') readonly InputCodeRef!: IInput;
 
+  @Ref('InputPasswordRef') readonly InputPasswordRef!: IInput;
+
+  submitLoading: Boolean = false;
+
   loginType: String = 'PHONE';
 
   options: Array<Object> = [];
 
+  signature: String = '';
+
   form: formObj = {
-    account: '',
+    phone: '',
     code: '',
     areaCode: '+86',
     password: '',
@@ -242,21 +257,61 @@ export default class extends Vue {
     this.loginType = type;
   }
 
-  getVoiceCode() {
-    console.log(this.InputPhoneRef)
-    if (!this.form.account && this.InputPhoneRef) {
+  onValidateForm() {
+    if (!this.form.phone && this.InputPhoneRef) {
       this.InputPhoneRef.validate();
-    } else if (!this.form.code && this.InputCodeRef) {
+    }
+    if (this.loginType === 'PHONE' && !this.form.code && this.InputCodeRef) {
       this.InputCodeRef.validate();
+    } else if (!this.form.password && this.InputPasswordRef) {
+      this.InputPasswordRef.validate();
     }
   }
 
-  getMessageCode() {
-    console.log(this.InputPhoneRef)
-    if (!this.form.account && this.InputPhoneRef) {
+  getVoiceCode() {
+    this.onValidateForm();
+  }
+
+  async getMessageCode() {
+    if (!this.form.phone && this.InputPhoneRef) {
       this.InputPhoneRef.validate();
-    } else if (!this.form.code && this.InputCodeRef) {
-      this.InputCodeRef.validate();
+    }
+    if (this.form.phone) {
+      try {
+        const { data } = await this.$http.post('/common/message/send', {
+          phone: this.form.phone,
+        });
+        if (data.code === 0) {
+          console.log(data.data)
+          this.signature = data.data.signature;
+        }
+      } catch (e) {
+        //
+      }
+    }
+  }
+
+  async handleSubmit() {
+    this.onValidateForm();
+    if (this.submitLoading) { return; }
+    if (this.loginType === 'PHONE') {
+      if (this.form.phone && this.form.areaCode) {
+        this.submitLoading = true;
+        try {
+          await this.$http.post('/users/login', {
+            type: 'PHONE',
+            phone: this.form.phone,
+            code: this.form.code,
+            signature: this.signature,
+          });
+        } catch (e) {
+          //
+        } finally {
+          this.submitLoading = false;
+        }
+      }
+    } else {
+
     }
   }
 }

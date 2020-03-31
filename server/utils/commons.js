@@ -1,4 +1,11 @@
 export const resReturn = (code, data, msg) => {
+  if (code !== 0 && typeof data === 'string') {
+    return ({
+      code,
+      data: null,
+      msg: data,
+    });
+  }
   if (typeof code === 'object') {
     return ({
       code: 0,
