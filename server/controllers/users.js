@@ -1,6 +1,8 @@
 import aesjs from 'aes-js';
+import jwt from 'jsonwebtoken';
 import { UserBlob } from '../models';
 import { UserService } from '../services';
+
 
 export const usersLogin = async (ctx) => {
   const { body } = ctx.request;
@@ -12,6 +14,10 @@ export const usersLogin = async (ctx) => {
     ctx.body = ctx.$commons.resReturn(400, null, '手机号不能为空');
     return;
   }
+  if (!body.signature) {
+    ctx.body = ctx.$commons.resReturn(400, null, '还未发送短信验证');
+    return;
+  }
   if (body.type === 'PHONE' && !body.code) {
     ctx.body = ctx.$commons.resReturn(400, null, '验证码不能为空');
     return;
@@ -20,6 +26,7 @@ export const usersLogin = async (ctx) => {
     ctx.body = ctx.$commons.resReturn(400, null, '密码不能为空');
     return;
   }
+
   const result = await UserService.getUserBy('phone', body.phone);
   if (result) {
     // 存在为登陆
@@ -30,7 +37,17 @@ export const usersLogin = async (ctx) => {
     if (typeof decryptedText === 'string' && decryptedText.includes('-')) {
       const beforePhone = decryptedText.split('-')[0];
       const beforeCode = decryptedText.split('-')[1];
-      if (beforePhone === body.phone && beforeCode === body.code) {
+      if (beforePhone === body.phone && beforeCode === body.code
+        && ctx.$commons.generatePassword(body.password, result.passsalt) === result.password) {
+        // 更新passsalt
+        const passsalt = ctx.$commons.randStr();
+        await UserService.updateUser(result._id, {
+          password: ctx.$commons.generatePassword(body.password, passsalt),
+          passsalt,
+          add_time: ctx.$commons.time(),
+          up_time: ctx.$commons.time(),
+        });
+        ctx.$commons.setLoginCookie(result._id, passsalt, ctx);
         ctx.body = ctx.$commons.resReturn(0, null, '登录成功');
       } else {
         ctx.body = ctx.$commons.resReturn(400, '验证码错误');
@@ -40,18 +57,20 @@ export const usersLogin = async (ctx) => {
     }
     return;
   }
-
+  const passsalt = ctx.$commons.randStr();
   const userInst = new UserBlob({
     phone: body.phone,
     areaCode: body.areaCode,
-    password: body.password,
-    token: ctx.$commons.randStr(),
+    password: ctx.$commons.generatePassword(body.password, passsalt),
+    passsalt,
     add_time: ctx.$commons.time(),
     up_time: ctx.$commons.time(),
   });
   try {
     const createResult = await userInst.save();
-    ctx.body = ctx.$commons.resReturn(0, createResult, '创建成功');
+    // 创建后登录
+    ctx.$commons.setLoginCookie(createResult._id, userInst.passsalt, ctx);
+    ctx.body = ctx.$commons.resReturn(0, null, '用户创建成功');
   } catch (e) {
     ctx.body = ctx.$commons.resReturn(500, null, '服务器错误');
   }

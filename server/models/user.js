@@ -6,7 +6,7 @@ const UserBlob = model('user', new Schema({
     required: true,
   },
   areaCode: String,
-  token: String,
+  passsalt: String,
   add_time: Number,
   up_time: Number,
   password: String,

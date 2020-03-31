@@ -29,24 +29,19 @@ export const sendMessage = async (ctx) => {
     return;
   }
   try {
-    const hasUser = await UserService.getUserBy('phone', phone);
-    if (hasUser) {
-      let randomCode = '';
-      for (let i = 0; i < 4; i++) {
-        randomCode += Math.floor(Math.random() * 10);
-      }
-      if (process.env.NODE_ENV === 'development') {
-        randomCode = '1234';
-      }
-      const text = `${phone}-${randomCode}`;
-      const textBytes = aesjs.utils.utf8.toBytes(text);
-      const aesCtr = new aesjs.ModeOfOperation.cbc(ctx.$constant.MESSAGE_SECRET);
-      const encryptedBytes = aesCtr.encrypt(textBytes);
-      const encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes);
-      ctx.body = ctx.$commons.resReturn(0, { signature: encryptedHex }, '短信发送成功');
-      return;
+    let randomCode = '';
+    for (let i = 0; i < 4; i++) {
+      randomCode += Math.floor(Math.random() * 10);
     }
-    ctx.body = ctx.$commons.resReturn(400, '不存在此用户');
+    if (process.env.NODE_ENV === 'development') {
+      randomCode = '1234';
+    }
+    const text = `${phone}-${randomCode}`;
+    const textBytes = aesjs.utils.utf8.toBytes(text);
+    const aesCtr = new aesjs.ModeOfOperation.cbc(ctx.$constant.MESSAGE_SECRET);
+    const encryptedBytes = aesCtr.encrypt(textBytes);
+    const encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes);
+    ctx.body = ctx.$commons.resReturn(0, { signature: encryptedHex }, '短信发送成功');
   } catch (e) {
     ctx.body = ctx.$commons.resReturn(500, '服务器错误');
   }

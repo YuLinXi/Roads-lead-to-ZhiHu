@@ -1,3 +1,6 @@
+import sha1 from 'sha1';
+import jwt from 'jsonwebtoken';
+
 export const resReturn = (code, data, msg) => {
   if (code !== 0 && typeof data === 'string') {
     return ({
@@ -51,3 +54,32 @@ export const time = () => Date.parse(Date());
 export const randStr = () => Math.random()
   .toString(36)
   .substr(2);
+
+/**
+ * 明文用户密码加密
+ * @param password
+ * @param passsalt
+ */
+
+export const generatePassword = (password, passsalt) => sha1(password + sha1(passsalt));
+
+
+export const expireDate = (day) => {
+  const date = new Date();
+  date.setTime(date.getTime() + day * 86400000);
+  return date;
+};
+
+export const setLoginCookie = (uid, passsalt, ctx) => {
+  const token = jwt.sign({ uid }, passsalt, { expiresIn: '7 days' });
+
+  ctx.cookies.set('_roads_lead_to_ZhiHu_token', token, {
+    expires: ctx.$commons.expireDate(7),
+    httpOnly: true,
+  });
+  ctx.cookies.set('_roads_lead_to_ZhiHu_uid', uid, {
+    expires: ctx.$commons.expireDate(7),
+    httpOnly: true,
+  });
+};
+
