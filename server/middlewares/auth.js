@@ -3,6 +3,7 @@ import { UserService } from '../services';
 
 const UN_LOGIN_LIST = [
   '/common/message/send',
+  '/common/supported_countries',
   '/users/login',
 ];
 

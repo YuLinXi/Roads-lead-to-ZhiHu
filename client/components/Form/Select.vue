@@ -65,7 +65,6 @@ export default class Select extends Vue {
 
   get realVerbose() {
     const findRest = this.options.find(item => this.value === item.value);
-    console.log(findRest)
     if (findRest) {
       return findRest.verbose;
     }

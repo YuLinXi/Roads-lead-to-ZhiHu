@@ -53,8 +53,11 @@
                   />
                   <div
                     @click="getMessageCode"
-                    class="login-sendMessage">
-                    获取短信验证码
+                    class="login-sendMessage"
+                    :class="{ disabled: !!countdown }"
+                  >
+                    {{ countdown ? `${countdown}秒后可重发` : (alreadySendMessage
+                    ? '重新获取短信验证码' : '获取短信验证码') }}
                   </div>
                 </div>
                 <div class="login-sendVoiceMessage">
@@ -227,9 +230,15 @@ export default class extends Vue {
 
   @Ref('InputPasswordRef') readonly InputPasswordRef!: IInput;
 
-  submitLoading: Boolean = false;
+  timer: any = null;
 
-  loginType: String = 'PHONE';
+  countdown: number = 0;
+
+  alreadySendMessage: boolean = false;
+
+  submitLoading: boolean = false;
+
+  loginType: string = 'PHONE';
 
   options: Array<Object> = [];
 
@@ -253,7 +262,7 @@ export default class extends Vue {
     }
   }
 
-  handleTabChange(type: String): void {
+  handleTabChange(type: string): void {
     this.loginType = type;
   }
 
@@ -272,6 +281,17 @@ export default class extends Vue {
     this.onValidateForm();
   }
 
+  countDownTimer() {
+    this.countdown = 60;
+    this.timer = setTimeout(() => {
+      this.countdown -= 1;
+      if (this.countdown === 0) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+    }, 1000);
+  }
+
   async getMessageCode() {
     if (!this.form.phone && this.InputPhoneRef) {
       this.InputPhoneRef.validate();
@@ -282,7 +302,10 @@ export default class extends Vue {
           phone: this.form.phone,
         });
         if (data.code === 0) {
-          console.log(data.data)
+          if (this.alreadySendMessage) {
+            this.countDownTimer();
+          }
+          this.alreadySendMessage = true;
           this.signature = data.data.signature;
         }
       } catch (e) {
@@ -304,6 +327,7 @@ export default class extends Vue {
             code: this.form.code,
             signature: this.signature,
           });
+          this.$router.push({ name: 'Home' });
         } catch (e) {
           //
         } finally {
@@ -311,7 +335,19 @@ export default class extends Vue {
         }
       }
     } else {
-
+      this.submitLoading = true;
+      try {
+        await this.$http.post('/users/login', {
+          type: 'PASSWORD',
+          phone: this.form.phone,
+          password: this.form.password,
+        });
+        this.$router.push({ name: 'Home' });
+      } catch (e) {
+        //
+      } finally {
+        this.submitLoading = false;
+      }
     }
   }
 }
@@ -429,6 +465,12 @@ export default class extends Vue {
           transform: translateY(-50%);
           &:hover {
             color: #76839b;
+          }
+          &.disabled {
+            cursor: auto;
+            opacity: .5;
+            pointer-events: none;
+            color: #8590a6;
           }
         }
         .login-options {
