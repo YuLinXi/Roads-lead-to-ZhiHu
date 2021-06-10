@@ -1,39 +1,26 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": [
-      "webpack-env"
-    ],
+    "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "src/*"
+      "@server/*": [
+        "./server/*"
       ]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "target": "es2017",
+    "module": "commonjs",
+    "sourceMap": true,
+    "outDir": "./bin",
+    "rootDir": "./server",
+    "typeRoots": [],
+    "types": [],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "include": [
-    "client/**/*.ts",
-    "client/**/*.tsx",
-    "client/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
-  ],
   "exclude": [
     "node_modules"
+  ],
+  "include": [
+    "server/**/*"
   ]
 }
