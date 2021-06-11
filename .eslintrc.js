@@ -1,21 +1,24 @@
 module.exports = {
   root: true,
-  env: {
-    node: true,
-  },
-  extends: [
-    'plugin:vue/essential',
-    '@vue/airbnb',
-    '@vue/typescript',
-  ],
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-param-reassign': 'off',
-    'import/prefer-default-export': 'off',
-    'class-methods-use-this': 'off'
-  },
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    parser: '@typescript-eslint/parser',
+    ecmaVersion: 2018,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
+    node: true,
+    jest: true,
+  },
+  extends: ['plugin:prettier/recommended', 'prettier'],
+  plugins: ['prettier'],
+  globals: {},
+  rules: {
+    indent: ['error', 2],
   },
 };
